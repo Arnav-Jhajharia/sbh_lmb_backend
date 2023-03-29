@@ -7,6 +7,7 @@ const User = require('../models/User');
 // Register user
 router.post('/register', async (req, res) => {
   try {
+
     const { username, email, password } = req.body;
 
     // Check if user with email already exists
@@ -19,11 +20,11 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword)
     // Create user
-    const user = new User({
-      username,
-      email,
-      password: hashedPassword,
-    });
+      const user = new User({
+        username,
+        email,
+        password: hashedPassword,
+      });
 
     // Save user to database
     await user.save();
@@ -45,18 +46,16 @@ router.post('/login', async (req, res) => {
     console.log(req.body)
   const { email, password } = req.body; 
 
-  
-  
   // Find user by email
   const user = await User.findOne({ email });
 
   // If user doesn't exist, return an error
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials' });
-  }
+  } 
   // Check if password is correct
   console.log('got memed')
-  const passwordMatch = await bcrypt.compare('no', user.password);
+  const passwordMatch = await bcrypt.compare(password, user.password);
   console.log(passwordMatch)
   if (!passwordMatch) {
     return res.status(401).json({ error: 'Invalid credentials' });

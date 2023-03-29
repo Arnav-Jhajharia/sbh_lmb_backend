@@ -8,6 +8,8 @@ const app = express()
 
 const indexRouter = require('./routes/index')
 const authRouter = require('./routes/auth')
+const deviceCreationRouter = require('./routes/deviceCreation')
+const deviceRegistrationRouter = require('./routes/deviceRegistration')
 
 // app.set('views', __dirname, '/views')
 
@@ -28,6 +30,8 @@ db.on('error', error => console.error(error))
 db.once('open', error => console.log('Connected to mongoose'))
 
 app.use('/', indexRouter)
-app.use('/api', authRouter)
-
+app.use('/auth', authRouter)
+app.use('/create', deviceCreationRouter)
+app.use('/reg', deviceRegistrationRouter)
+app.use('/')
 app.listen(process.env.PORT || 3000)
