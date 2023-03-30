@@ -33,5 +33,5 @@ app.use('/', indexRouter)
 app.use('/auth', authRouter)
 app.use('/create', deviceCreationRouter)
 app.use('/reg', deviceRegistrationRouter)
-app.use('/')
+
 app.listen(process.env.PORT || 3000)

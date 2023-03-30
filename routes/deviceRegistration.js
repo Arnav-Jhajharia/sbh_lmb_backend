@@ -29,7 +29,7 @@ router.get('/sensor', verifyToken, async (req, res) => {
         return res.status(401).json({ error: 'no brains or what-' });
 
     const user = req.user; // Retrieve  the user data from the req object
-    user.sensorsets.push(rover);
+    user.sensorsets.push(sensor);
     await user.save();
     console.log('ho gaya')
     res.json({ });

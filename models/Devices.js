@@ -5,7 +5,7 @@ const recordSensorSetSchema = new mongoose.Schema({
     humidity: { type: Number, required: true,default: 0 },
     sunlight: { type: Number, required: true,default: 0 },
     soil_moisture: { type: Number, required: true,default: 0 },
-    wateredToday: { type: Number, required: true,default: 0 },
+    wateredToday : { type: Number, required: true,default: 0 },
     batteryLevel: { type: Number, required: true,default: 0 },
     timestamp: { type: Date, required: true, default: Date.now }
   });
