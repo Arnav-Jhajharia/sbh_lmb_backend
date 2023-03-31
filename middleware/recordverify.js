@@ -5,10 +5,10 @@ async function verifyRover (req, res, next) {
     if (typeof bearerHeader !== 'undefined') {
       const bearerToken = bearerHeader;
       req.token = bearerToken;
-    const rover = await Rover.findOne({id: req.body.id})
+    const rover = await Rover.findOne({id: bearerHeader})
 
-          if (!user) {
-            res.status(404).json({ error: 'User not found' });
+          if (!rover) {
+            res.status(404).json({ error: 'Rover not found' });
           } else {
             req.rover = rover; // Set the user property of the req object to the retrieved user data
             next();
@@ -24,10 +24,10 @@ async function verifyRover (req, res, next) {
     if (typeof bearerHeader !== 'undefined') {
       const bearerToken = bearerHeader;
       req.token = bearerToken;
-    const sensor = await SensorSet.findOne({id: req.body.id})
+    const sensor = await SensorSet.findOne({id: bearerHeader})
 
-          if (!user) {
-            res.status(404).json({ error: 'User not found' });
+          if (!sensor) {
+            res.status(404).json({ error: 'Sensor not found' });
           } else {
             req.sensor = sensor; // Set the user property of the req object to the retrieved user data
             next();

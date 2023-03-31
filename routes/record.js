@@ -21,7 +21,7 @@ router.post('/rover', verifyRover, async (req, res) => {
   
 
 // Register sensor 
-router.get('/sensor', verifySensor, async (req, res) => {
+router.post('/sensor', verifySensor, async (req, res) => {
     const sensor = req.sensor;
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
@@ -34,9 +34,27 @@ router.get('/sensor', verifySensor, async (req, res) => {
         res.status(401).json('req.body messed up shit')
     }
     await sensor.save();
-    console.log('ho gaya')
-    res.json({ });
+    console.log('ho gaya');
+    return res.json({ });
   });
   
+  router.post('/water', verifySensor, async (req, res) => {
+    const sensor = req.sensor;
+    if(!sensor)
+    return res.status(401).json({ error: 'no brains or what-' });
+    
+    try {
+      sensor.lastWatered = {
+        duration: Number(req.body.duration)
+      }
+      await sensor.save();
+    }
+    catch(e) {
+      console.log(e)
+      return res.status(401).json({ error: 'couldnt idk why-' });
+ 
+    }
+    return res.json({})
+  })
 
 module.exports = router;

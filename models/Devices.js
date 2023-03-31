@@ -9,6 +9,10 @@ const recordSensorSetSchema = new mongoose.Schema({
     batteryLevel: { type: Number, required: true,default: 0 },
     timestamp: { type: Date, required: true, default: Date.now }
   });
+const lastWatered = new mongoose.Schema({
+  duration: {type: Number, required: true, default: 20},
+  timestamp: {type: Date, required: true, default: Date.now}
+})
 const SensorSetSchema = new mongoose.Schema({
     name: {
       type: String,
@@ -19,7 +23,8 @@ const SensorSetSchema = new mongoose.Schema({
       type: String,
       default: () => (Math.floor(Math.random() * 1000000000)).toString(),
       unique: true
-    }
+    },
+    lastWatered: lastWatered,
   });
 
 const SensorSet = mongoose.model('SensorSet', SensorSetSchema);

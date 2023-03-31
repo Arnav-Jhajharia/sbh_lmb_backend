@@ -14,7 +14,7 @@ router.post('/rover', verifyToken, async (req, res) => {
         return res.status(401).json ({ error: 'no brains or what-' });
 
     const user = req.user; // Retrieve  the user data from the req object
-    user.rovers.push(rover);
+    user.rovers = rover;
     await user.save();
     console.log('ho gaya')
     res.json({ });
@@ -22,14 +22,14 @@ router.post('/rover', verifyToken, async (req, res) => {
   
 
 // Register sensor 
-router.get('/sensor', verifyToken, async (req, res) => {
+router.post('/sensor', verifyToken, async (req, res) => {
     const { id } = req.body;
     const sensor = await SensorSet.findOne({ id });
-    if(!rover)
+    if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
 
     const user = req.user; // Retrieve  the user data from the req object
-    user.sensorsets.push(sensor);
+    user.sensorsets = sensor;
     await user.save();
     console.log('ho gaya')
     res.json({ });

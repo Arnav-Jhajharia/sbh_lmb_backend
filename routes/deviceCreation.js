@@ -28,7 +28,10 @@ router.post('/sensor', async (req, res) => {
     const sensor = new SensorSet({
         name: 'no',
         records: [{
-        }]
+        }],
+        lastWatered: {
+          
+        }
       });
 
     await sensor.save();

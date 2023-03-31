@@ -10,7 +10,8 @@ const indexRouter = require('./routes/index')
 const authRouter = require('./routes/auth')
 const deviceCreationRouter = require('./routes/deviceCreation')
 const deviceRegistrationRouter = require('./routes/deviceRegistration')
-
+const recordRouter = require('./routes/record')
+const getRouter = require('./routes/get')
 // app.set('views', __dirname, '/views')
 
 app.use(express.static('public')) 
@@ -33,5 +34,6 @@ app.use('/', indexRouter)
 app.use('/auth', authRouter)
 app.use('/create', deviceCreationRouter)
 app.use('/reg', deviceRegistrationRouter)
-
+app.use('/record', recordRouter)
+app.use('/get', getRouter)
 app.listen(process.env.PORT || 3000)
