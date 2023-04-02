@@ -21,7 +21,9 @@ router.get('/rover', verifyToken, async (req, res) => {
 
 // Register sensor 
 router.get('/sensor', verifyToken, async (req, res) => {
+  try {
     const sensorId = req.user.sensorsets;
+    
     console.log(sensorId);
     const sensor = await SensorSet.findOne({_id:sensorId})
     console.log(sensor)
@@ -29,6 +31,12 @@ router.get('/sensor', verifyToken, async (req, res) => {
         return res.status(401).json({ error: 'no brains or what-' });
 
     return res.json(sensor.toJSON());
+  }
+
+  catch(e) {
+    console.log(e)
+    return res.status(400);
+  }
   });
   
 router.get('/userInfo', verifyToken, async (req, res) => {
