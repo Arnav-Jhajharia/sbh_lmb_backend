@@ -5,13 +5,12 @@ const recordSensorSetSchema = new mongoose.Schema({
     humidity: { type: Number, required: true,default: 0 },
     sunlight: { type: Number, required: true,default: 0 },
     soil_moisture: { type: Number, required: true,default: 0 },
-    wateredToday : { type: Number, required: true,default: 0 },
     batteryLevel: { type: Number, required: true,default: 0 },
     timestamp: { type: Date, required: true, default: Date.now }
   });
 const lastWatered = new mongoose.Schema({
   duration: {type: Number, required: true, default: 20},
-  timestamp: {type: Date, required: true, default: Date.now}
+  timestamp: {type: Date, required: true, default: Date.now},
 })
 const SensorSetSchema = new mongoose.Schema({
     name: {
@@ -24,7 +23,9 @@ const SensorSetSchema = new mongoose.Schema({
       default: () => (Math.floor(Math.random() * 1000000000)).toString(),
       unique: true
     },
-    lastWatered: lastWatered,
+    lastWatered: lastWatered, 
+    isWatering: {type: Boolean, required: true, default: false},
+    timeWateringStart: {type: Date, required: true, default: Date.now},
   });
 
 const SensorSet = mongoose.model('SensorSet', SensorSetSchema);

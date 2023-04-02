@@ -34,5 +34,4 @@ router.get('/sensor', verifyToken, async (req, res) => {
 router.get('/userInfo', verifyToken, async (req, res) => {
     return res.json(req.user.toJSON())
 })
-
 module.exports = router;
