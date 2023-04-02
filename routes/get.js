@@ -8,7 +8,7 @@ const { Rover, SensorSet } = require('../models/Devices')
 
 // Register rover 
 router.get('/rover', verifyToken, async (req, res) => {
-    const roverId = req.user.rovers[0];
+    const roverId = req.user.rovers;
     const rover = await Rover.findOne({_id:roverId})
     console.log(rover)
     if(!rover)
@@ -21,7 +21,7 @@ router.get('/rover', verifyToken, async (req, res) => {
 
 // Register sensor 
 router.get('/sensor', verifyToken, async (req, res) => {
-    const sensorId = req.user.sensorsets[0];
+    const sensorId = req.user.sensorsets;
     console.log(sensorId);
     const sensor = await SensorSet.findOne({_id:sensorId})
     console.log(sensor)
