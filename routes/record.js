@@ -67,7 +67,7 @@ router.post('/sensor', verifySensor, async (req, res) => {
     }
     
     console.log('ho gaya');
-    return res.json({sensor: sensor.isWatering});
+    return res.json({water: sensor.isWatering});
   });
   
   router.post('/water', verifySensor, async (req, res) => {
