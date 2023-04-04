@@ -43,3 +43,36 @@ router.get('/userInfo', verifyToken, async (req, res) => {
     return res.json(req.user.toJSON())
 })
 module.exports = router;
+
+router.get('/temperature', verifyToken, async (req, res) => {
+
+})
+
+router.get('/devices', verifyToken, async (req, res) => {
+  try {
+  const roverId = req.user.rovers;
+  const sensorId = req.user.sensorsets;
+  let rover, sensor;
+  rover = sensor = null;
+  if(roverId != null)
+    rover = await Rover.findOne({_id:roverId})
+  if(sensorId != null)
+    sensor = await SensorSet.findOne({_id:sensorId})
+  
+  let json = {}
+  if(rover)
+  {
+    json = {...json, rover}
+  }
+  if(sensor)
+  {
+    json = {...json, sensor}
+  }
+
+  return res.json(json);
+}
+catch(e) 
+{
+  return res.status(400).json({error:e})
+}
+}) 
