@@ -7,7 +7,7 @@ const {verifyRover, verifySensor} = require('./../middleware/recordverify')
 const { Rover, SensorSet } = require('../models/Devices')
 const time = Date.now()
 const isWatering = false;
-const SOIL_MOISTURE = 0;
+const SOIL_MOISTURE = 50;
 // Register rover 
 router.post('/rover', verifyRover, async (req, res) => {
     const rover = req.rover;
