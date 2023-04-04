@@ -42,11 +42,7 @@ router.get('/sensor', verifyToken, async (req, res) => {
 router.get('/userInfo', verifyToken, async (req, res) => {
     return res.json(req.user.toJSON())
 })
-module.exports = router;
 
-router.get('/temperature', verifyToken, async (req, res) => {
-
-})
 
 router.get('/devices', verifyToken, async (req, res) => {
   try {
@@ -76,20 +72,73 @@ catch(e)
   return res.status(400).json({error:e})
 }
 }) 
+router.get('/charts', async (req, res) => {
+  const { startDate, endDate } = req.query;
 
-router.get('/charts', verifyToken, async (req, res) => {
-  try {
-    const sensorId = req.user.sensorsets;
-    let sensor;
-    if(sensorId == null)
-      return res.status(404).json({error:"Sensor not found"})
+  // Set the default start date to 24 hours ago
+  const start = startDate ? new Date(startDate) : new Date(Date.now() - 24 * 60 * 60 * 2500);
+  const end = endDate ? new Date(endDate) : new Date();
 
-    sensor = await SensorSet.findOne({_id:sensorId})
-    const temperatureChart = 
+  // Retrieve data from MongoDB with a 2-minute interval
+  const data = await SensorSet.aggregate([
+    {
+      $match: {
+        'records.timestamp': { $gte: start, $lte: end },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        temperature: '$records.temperature',
+        humidity: '$records.humidity',
+        sunlight: '$records.sunlight',
+        soil_moisture: '$records.soil_moisture',
+        timestamp: {
+          $dateTrunc: {
+            date: '$records.timestamp',
+            unit: 'minute',
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$timestamp',
+        temperature: { $avg: '$temperature' },
+        humidity: { $avg: '$humidity' },
+        sunlight: { $avg: '$sunlight' },
+        soil_moisture: { $avg: '$soil_moisture' },
+      },
+    },
+    {
+      $sort: {
+        _id: 1,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        temperature: { $push: '$temperature' },
+        humidity: { $push: '$humidity' },
+        sunlight: { $push: '$sunlight' },
+        soil_moisture: { $push: '$soil_moisture' },
+        timestamp: { $push: { $dateToString: { format: '%I:%M %p', date: '$_id' } } },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        temperature: { $slice: ['$temperature', 50] },
+        humidity: { $slice: ['$humidity', 50] },
+        sunlight: { $slice: ['$sunlight', 50] },
+        soil_moisture: { $slice: ['$soil_moisture', 50] },
+        timestamp: { $slice: ['$timestamp', 50] },
+      },
+    },
+  ]);
 
-  }
-  catch(e)
-  {
-    return res.status(400).json({error:e})
-  }
-})
+  res.json(data[0]);
+});
+
+
+module.exports = router;

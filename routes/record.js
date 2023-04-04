@@ -4,23 +4,42 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const {verifyRover, verifySensor} = require('./../middleware/recordverify')
+const verifyToken = require('./../middleware/verification')
 const { Rover, SensorSet } = require('../models/Devices')
 const time = Date.now()
 const isWatering = false;
 const SOIL_MOISTURE = 50;
 // Register rover 
-router.post('/rover', verifyRover, async (req, res) => {
-    const rover = req.rover;
-    if(!rover)
-        return res.status(401).json ({ error: 'no brains or what-' });
+router.post('/rover', verifyToken, async (req, res) => {
+  // const user = req.user; // Retrieve  the user data from the req object
+  try {
+    const roverId = req.user.rovers;
 
-    // const user = req.user; // Retrieve  the user data from the req object
-    rover.records.push(req.body);
-    await rover.save();
-    console.log('ho gaya')
-    res.json({ });
-  });
+    const { direction } = req.body;
+    if(roverId == null) return;
+    let rover = await Rover.findOne({_id:roverId})
+    console.log(rover.toJSON())
+    if(!rover)
+        return res.status(401).json({ error: 'no brains or what-' });
+    rover.records.push({direction});
+    await rover.save()
+      // if(req.body.soil_moisture > SOIL_MOISTURE)
+      // {
+      //   if(isWatering == true)
+      //   return res.json({water: true})
+      // }
+ 
+      console.log('ho gaya');
+      return res.json({rover: rover.toJSON()});
+  }
   
+  catch(e)
+  {
+    console.log(e)
+    return res.status(401).json('req.body messed up shit')
+  }
+ 
+});
 
 // Register sensor 
 router.post('/sensor', verifySensor, async (req, res) => {
@@ -88,5 +107,14 @@ router.post('/sensor', verifySensor, async (req, res) => {
     }
     return res.json({})
   })
+
+router.get('/getDirection', verifyRover, async (req, res) => {
+  const rover = req.rover;
+  if(!rover)
+  return res.status(401).json({ error: 'no brains or what-' });
+  
+  return res.json({direction:rover.records[rover.records.length - 1].movement})
+})
+
 
 module.exports = router;

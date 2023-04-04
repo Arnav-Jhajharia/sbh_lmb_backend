@@ -21,8 +21,6 @@ router.post('/register', async (req, res) => {
     console.log(hashedPassword)
     // Create user
       const user = new User({
-        sensorsets: {},
-        rovers: {},
         username,
         email,
         password: hashedPassword,
