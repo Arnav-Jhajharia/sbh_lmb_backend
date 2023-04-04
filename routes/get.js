@@ -30,7 +30,7 @@ router.get('/sensor', verifyToken, async (req, res) => {
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
     const records = sensor.records[sensor.records.length - 1]
-    return res.json({records: records, lastWatered: lastWatered});
+    return res.json({records: records, lastWatered: sensor.lastWatered});
   }
 
   catch(e) {
