@@ -21,7 +21,7 @@ router.post('/rover', verifyToken, async (req, res) => {
     console.log(rover.toJSON())
     if(!rover)
         return res.status(401).json({ error: 'no brains or what-' });
-    rover.records.push({direction});
+    rover.records.push({movement:direction});
     await rover.save()
       // if(req.body.soil_moisture > SOIL_MOISTURE)
       // {
