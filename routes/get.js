@@ -29,8 +29,8 @@ router.get('/sensor', verifyToken, async (req, res) => {
     console.log(sensor)
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
-        const records = sensor.records[sensor.records.length - 1]
-    return res.json({records: records, lastWatered: sensor.lastWatered});
+    const records = sensor.records[sensor.records.length - 1]
+    return res.json({records: records, lastWatered: lastWatered});
   }
 
   catch(e) {
@@ -76,3 +76,20 @@ catch(e)
   return res.status(400).json({error:e})
 }
 }) 
+
+router.get('/charts', verifyToken, async (req, res) => {
+  try {
+    const sensorId = req.user.sensorsets;
+    let sensor;
+    if(sensorId == null)
+      return res.status(404).json({error:"Sensor not found"})
+
+    sensor = await SensorSet.findOne({_id:sensorId})
+    const temperatureChart = 
+
+  }
+  catch(e)
+  {
+    return res.status(400).json({error:e})
+  }
+})
