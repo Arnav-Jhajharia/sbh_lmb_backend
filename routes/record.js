@@ -5,7 +5,8 @@ const router = express.Router();
 const User = require('../models/User');
 const {verifyRover, verifySensor} = require('./../middleware/recordverify')
 const verifyToken = require('./../middleware/verification')
-const { Rover, SensorSet } = require('../models/Devices')
+const { Rover, SensorSet } = require('../models/Devices');
+const { removeListener } = require('../models/User');
 const time = Date.now()
 const isWatering = false;
 const SOIL_MOISTURE = 50;
@@ -120,7 +121,11 @@ router.get('/getDirection', verifyRover, async (req, res) => {
   const rover = req.rover;
   if(!rover)
   return res.status(401).json({ error: 'no brains or what-' });
-  
+  if(rover.records[rover.records.length - 1].seed == true)
+  {
+    rover.records.push({seed:false})
+    return res.json(rover.records[rover.records.length - 2])
+  }
   return res.json(rover.records[rover.records.length - 1])
 })
 
