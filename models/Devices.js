@@ -31,6 +31,8 @@ const SensorSetSchema = new mongoose.Schema({
 const SensorSet = mongoose.model('SensorSet', SensorSetSchema);
 
 const recordRoverSchema = new mongoose.Schema({
+    seed: {type: Boolean, required: true, default: false},
+    arm: {type: String, required: true, default: "up"},
     movement: {type: String, required: true, default: "nothing"},
     status: {type: String, required: true,default: 'Idle' },
     batteryLevel: { type: Number, required: true, default: 0 },

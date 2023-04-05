@@ -9,7 +9,7 @@ function verifyToken(req, res, next) {
       jwt.verify(bearerToken, process.env.SECRET_KEY, async (err, authData) => {
         if (err) {
             console.log('how did we get here')
-          res.sendStatus(403);
+          res.sendStatus(403);  
         } else {
           const user = await User.findOne({ _id: authData.userId });
           if (!user) {

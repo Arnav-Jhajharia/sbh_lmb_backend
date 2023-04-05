@@ -18,10 +18,18 @@ router.post('/rover', verifyToken, async (req, res) => {
     const { direction } = req.body;
     if(roverId == null) return;
     let rover = await Rover.findOne({_id:roverId})
-    console.log(rover.toJSON())
+    
     if(!rover)
         return res.status(401).json({ error: 'no brains or what-' });
     rover.records.push({movement:direction});
+    const limit = 10; // number of records to keep
+    
+
+    if (rover.records.length > limit) {
+      rover.records.splice(0, rover.records.length - limit);
+   
+    }
+    
     await rover.save()
       // if(req.body.soil_moisture > SOIL_MOISTURE)
       // {
@@ -113,8 +121,48 @@ router.get('/getDirection', verifyRover, async (req, res) => {
   if(!rover)
   return res.status(401).json({ error: 'no brains or what-' });
   
-  return res.json({direction:rover.records[rover.records.length - 1].movement})
+  return res.json(rover.records[rover.records.length - 1])
 })
 
 
 module.exports = router;
+
+
+router.post('/arm', verifyToken, async (req, res) => {
+ // const user = req.user; // Retrieve  the user data from the req object
+ try {
+  const roverId = req.user.rovers;
+
+  const { arm, seed } = req.body;
+  if(roverId == null) return;
+  let rover = await Rover.findOne({_id:roverId})
+  
+  if(!rover)
+      return res.status(401).json({ error: 'no brains or what-' });
+  rover.records.push({arm:arm, seed:seed});
+  const limit = 10; // number of records to keep
+  
+
+  if (rover.records.length > limit) {
+    rover.records.splice(0, rover.records.length - limit);
+ 
+  }
+  
+  await rover.save()
+    // if(req.body.soil_moisture > SOIL_MOISTURE)
+    // {
+    //   if(isWatering == true)
+    //   return res.json({water: true})
+    // }
+
+    console.log('ho gaya');
+    return res.json({rover: rover.toJSON()});
+}
+
+catch(e)
+{
+  console.log(e)
+  return res.status(401).json('req.body messed up shit')
+}
+
+});
