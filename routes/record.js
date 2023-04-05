@@ -123,7 +123,8 @@ router.get('/getDirection', verifyRover, async (req, res) => {
   return res.status(401).json({ error: 'no brains or what-' });
   if(rover.records[rover.records.length - 1].seed == true)
   {
-    rover.records.push({seed:false})
+    rover.records.push({seed:false, arm:'down'})
+    await rover.save();
     return res.json(rover.records[rover.records.length - 2])
   }
   return res.json(rover.records[rover.records.length - 1])
