@@ -1,22 +1,6 @@
-if(process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+const mongoose = require('mongoose');
 
-const express = require('express')
-const bodyParser = require('body-parser');
-const app = express()
-
-const indexRouter = require('./routes/index')
-const authRouter = require('./routes/auth')
-const deviceCreationRouter = require('./routes/deviceCreation')
-const deviceRegistrationRouter = require('./routes/deviceRegistration')
-const recordRouter = require('./routes/record')
-const getRouter = require('./routes/get')
-// app.set('views', __dirname, '/views')
-
-app.use(express.static('public')) 
-
-const {SensorSet} = require('./models/Devices')
+const {SensorSetSchema} = require('./models/Devices')
 
 const cron = require('node-cron');
 
@@ -83,13 +67,13 @@ const cron = require('node-cron');
 // const cron = require('node-cron');
 
 // Schedule a cron job to run every minute
-let job = cron.schedule('* * * * *', async () => {
+cron.schedule('* * * * *', async () => {
   try {
     // Get the current timestamp
     const timestamp = Date.now();
 
     // Find all records that were created in the last 60 seconds
-    const sensorSet = await SensorSet.findOne({ id: '964727042' });
+    const sensorSet = await SensorSetSchema.findOne({ id: '964727042' });
     const records = sensorSet.temp_records.filter(temp_records => temp_records.timestamp > timestamp - 60000);
 
     // Calculate the average of all the records
@@ -123,9 +107,7 @@ let job = cron.schedule('* * * * *', async () => {
   } catch (error) {
     console.log(error);
   }
-} ,null,
-true,
-'America/Los_Angeles');
+});
 
 // Function to calculate the average of a property in an array of records
 function calculateAverage(records, property) {
@@ -134,24 +116,4 @@ function calculateAverage(records, property) {
   return average;
 }
 
-job.start();
-// add the body-parser middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
-
-const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-})
-const db = mongoose.connection
-db.on('error', error => console.error(error))
-db.once('open', error => console.log('Connected to mongoose'))
-
-app.use('/', indexRouter)
-app.use('/auth', authRouter)
-app.use('/create', deviceCreationRouter)
-app.use('/reg', deviceRegistrationRouter)
-app.use('/record', recordRouter)
-app.use('/get', getRouter)
-app.listen(3000, "0.0.0.0")

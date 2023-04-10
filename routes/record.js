@@ -60,7 +60,7 @@ router.post('/sensor', verifySensor, async (req, res) => {
 
     // const user = req.user; // Retrieve  the user data from the req object
     try {
-      sensor.records.push(req.body);
+      sensor.temp_records.push(req.body);
         if(Number(req.body.soil_moisture) < SOIL_MOISTURE)
         {
           console.log("if block")
