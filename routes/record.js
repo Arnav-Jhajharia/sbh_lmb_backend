@@ -93,7 +93,7 @@ router.post('/sensor', verifySensor, async (req, res) => {
     // const user = req.user; // Retrieve  the user data from the req object
     try {
       sensor.temp_records.push(req.body);
-      if(sensor.waterMode != auto) {
+      if(sensor.waterMode != 'auto') {
         await sensor.save();
         return res.json({water: (sensor.waterMode === 'on')?true:false});
       }
