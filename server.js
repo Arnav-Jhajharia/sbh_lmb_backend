@@ -83,7 +83,7 @@ const cron = require('node-cron');
 // const cron = require('node-cron');
 
 // Schedule a cron job to run every minute
-cron.schedule('* * * * *', async () => {
+let job = cron.schedule('* * * * *', async () => {
   try {
     // Get the current timestamp
     const timestamp = Date.now();
@@ -123,7 +123,9 @@ cron.schedule('* * * * *', async () => {
   } catch (error) {
     console.log(error);
   }
-});
+} ,null,
+true,
+'America/Los_Angeles');
 
 // Function to calculate the average of a property in an array of records
 function calculateAverage(records, property) {
@@ -132,7 +134,7 @@ function calculateAverage(records, property) {
   return average;
 }
 
-cron.start();
+job.start();
 // add the body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
