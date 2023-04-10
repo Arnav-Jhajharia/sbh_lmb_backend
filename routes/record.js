@@ -9,7 +9,8 @@ const { Rover, SensorSet } = require('../models/Devices');
 const { removeListener } = require('../models/User');
 const time = Date.now()
 const isWatering = false;
-const SOIL_MOISTURE = 50;
+const SOIL_MOISTURE = 70;
+
 // Register rover 
 router.post('/rover', verifyToken, async (req, res) => {
   // const user = req.user; // Retrieve  the user data from the req object
@@ -45,7 +46,7 @@ router.post('/rover', verifyToken, async (req, res) => {
   catch(e)
   {
     console.log(e)
-    return res.status(401).json('req.body messed up shit')
+    return res.status(401).json('req.body messed up')
   }
  
 });
