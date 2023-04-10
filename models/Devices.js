@@ -26,6 +26,7 @@ const SensorSetSchema = new mongoose.Schema({
     lastWatered: lastWatered, 
     isWatering: {type: Boolean, required: true, default: false},
     timeWateringStart: {type: Date, required: true, default: Date.now},
+    temp_records: [recordSensorSetSchema] // new field for temporary records
   });
 
 const SensorSet = mongoose.model('SensorSet', SensorSetSchema);
@@ -49,6 +50,7 @@ const RoverSchema = new mongoose.Schema({
         default: () => Math.floor(Math.random() * 1000000000),
         unique: true
     }
+
     });
 
 const Rover = mongoose.model('Rover', RoverSchema);
