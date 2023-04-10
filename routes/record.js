@@ -225,7 +225,7 @@ router.post('/self_water', verifyToken, async (req, res)=> {
     sensor.waterMode = 'off';
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
-    sensor.thresholdMoisture = moistureLevel;
+    // sensor.thresholdMoisture = moistureLevel;
     
     
     await sensor.save()
