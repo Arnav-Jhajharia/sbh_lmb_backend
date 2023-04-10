@@ -226,15 +226,9 @@ router.post('/self_water', verifyToken, async (req, res)=> {
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
     sensor.thresholdMoisture = moistureLevel;
-    const limit = 10; // number of records to keep
     
-  
-    if (rover.records.length > limit) {
-      rover.records.splice(0, rover.records.length - limit);
-   
-    }
     
-    await rover.save()
+    await sensor.save()
       // if(req.body.soil_moisture > SOIL_MOISTURE)
       // {
       //   if(isWatering == true)
@@ -242,7 +236,7 @@ router.post('/self_water', verifyToken, async (req, res)=> {
       // }
   
       console.log('ho gaya');
-      return res.json({rover: rover.toJSON()});
+      return res.json({rover: sensor.toJSON()});
   }
   
   catch(e)
