@@ -5,66 +5,66 @@ const {SensorSetSchema} = require('./models/Devices')
 const cron = require('node-cron');
 
 // Schedule a cron job to run every minute
-cron.schedule('* * * * *', async () => {
-  try {
-    // Get the current timestamp
-    const timestamp = Date.now();
+// cron.schedule('* * * * *', async () => {
+//   try {
+//     // Get the current timestamp
+//     const timestamp = Date.now();
 
-    // Filter records by sensorSetId
-    const filteredRecords = records.filter(record => record.sensorSetId === 'your-sensor-set-id');
+//     // Filter records by sensorSetId
+//     const filteredRecords = records.filter(record => record.sensorSetId === 'your-sensor-set-id');
 
-    // Calculate the average of all the records
-    const averageTemperature = calculateAverage(filteredRecords, 'temperature');
-    const averageHumidity = calculateAverage(filteredRecords, 'humidity');
-    const averageSunlight = calculateAverage(filteredRecords, 'sunlight');
-    const averageSoilMoisture = calculateAverage(filteredRecords, 'soil_moisture');
-    const averageBatteryLevel = calculateAverage(filteredRecords, 'batteryLevel');
+//     // Calculate the average of all the records
+//     const averageTemperature = calculateAverage(filteredRecords, 'temperature');
+//     const averageHumidity = calculateAverage(filteredRecords, 'humidity');
+//     const averageSunlight = calculateAverage(filteredRecords, 'sunlight');
+//     const averageSoilMoisture = calculateAverage(filteredRecords, 'soil_moisture');
+//     const averageBatteryLevel = calculateAverage(filteredRecords, 'batteryLevel');
 
-    // Create a new record with the average values and timestamp
-    const newRecord = {
-      temperature: averageTemperature,
-      humidity: averageHumidity,
-      sunlight: averageSunlight,
-      soil_moisture: averageSoilMoisture,
-      batteryLevel: averageBatteryLevel,
-      timestamp: timestamp
-    };
+//     // Create a new record with the average values and timestamp
+//     const newRecord = {
+//       temperature: averageTemperature,
+//       humidity: averageHumidity,
+//       sunlight: averageSunlight,
+//       soil_moisture: averageSoilMoisture,
+//       batteryLevel: averageBatteryLevel,
+//       timestamp: timestamp
+//     };
 
-    // Push the new record into the temp sensor set
-    await TempSensorSetSchema.create(newRecord);
+//     // Push the new record into the temp sensor set
+//     await TempSensorSetSchema.create(newRecord);
 
-    // Remove all records that are older than 60 seconds
-    await TempSensorSetSchema.deleteMany({
-      timestamp: { $lt: timestamp - 60000 }
-    });
+//     // Remove all records that are older than 60 seconds
+//     await TempSensorSetSchema.deleteMany({
+//       timestamp: { $lt: timestamp - 60000 }
+//     });
 
-    // Get the latest 60 temp records from the temp sensor set
-    const tempRecords = await TempSensorSetSchema.find({
-      sensorSetId: 'your-sensor-set-id'
-    }).sort({ timestamp: -1 }).limit(60);
+//     // Get the latest 60 temp records from the temp sensor set
+//     const tempRecords = await TempSensorSetSchema.find({
+//       sensorSetId: 'your-sensor-set-id'
+//     }).sort({ timestamp: -1 }).limit(60);
 
-    // Create a new record with the average values and timestamp
-    const averageTempRecord = {
-      temperature: calculateAverage(tempRecords, 'temperature'),
-      humidity: calculateAverage(tempRecords, 'humidity'),
-      sunlight: calculateAverage(tempRecords, 'sunlight'),
-      soil_moisture: calculateAverage(tempRecords, 'soil_moisture'),
-      batteryLevel: calculateAverage(tempRecords, 'batteryLevel'),
-      timestamp: timestamp
-    };
+//     // Create a new record with the average values and timestamp
+//     const averageTempRecord = {
+//       temperature: calculateAverage(tempRecords, 'temperature'),
+//       humidity: calculateAverage(tempRecords, 'humidity'),
+//       sunlight: calculateAverage(tempRecords, 'sunlight'),
+//       soil_moisture: calculateAverage(tempRecords, 'soil_moisture'),
+//       batteryLevel: calculateAverage(tempRecords, 'batteryLevel'),
+//       timestamp: timestamp
+//     };
 
-    // Push the new record into the main sensor set
-    await SensorSetSchema.updateOne(
-      { name: 'sensor-set-name' },
-      { $push: { temp_records: averageTempRecord } }
-    );
+//     // Push the new record into the main sensor set
+//     await SensorSetSchema.updateOne(
+//       { name: 'sensor-set-name' },
+//       { $push: { temp_records: averageTempRecord } }
+//     );
 
-  } catch (error) {
-    console.log(error);
-  }
-});
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
-const cron = require('node-cron');
+// const cron = require('node-cron');
 
 // Schedule a cron job to run every minute
 cron.schedule('* * * * *', async () => {

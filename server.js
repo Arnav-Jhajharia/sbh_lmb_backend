@@ -1,7 +1,7 @@
 if(process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
-const cron1 = require('./cron');
+const cron = require('./cron');
 const express = require('express')
 const bodyParser = require('body-parser');
 const app = express()
@@ -16,7 +16,7 @@ const getRouter = require('./routes/get')
 
 app.use(express.static('public')) 
 
-cron1.start();
+cron.start();
 // add the body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
