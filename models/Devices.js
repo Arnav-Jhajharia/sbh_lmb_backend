@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const recordSensorSetSchema = new mongoose.Schema({
+
     temperature: { type: Number, required: true,default: 0 },
     humidity: { type: Number, required: true,default: 0 },
     sunlight: { type: Number, required: true,default: 0 },
@@ -13,6 +14,7 @@ const lastWatered = new mongoose.Schema({
   timestamp: {type: Date, required: true, default: Date.now},
 })
 const SensorSetSchema = new mongoose.Schema({
+  thresholdMoisture: {type: Number, required: true, default: 50}, 
     name: {
       type: String,
       required: true
