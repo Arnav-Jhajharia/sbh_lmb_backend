@@ -91,7 +91,10 @@ let job = cron.schedule('* * * * *', async () => {
     // Find all records that were created in the last 60 seconds
     const sensorSet = await SensorSet.findOne({ id: '964727042' });
     const records = sensorSet.temp_records.filter(temp_records => temp_records.timestamp > timestamp - 60000);
-
+    if(records.length < 4)
+    {
+      return;
+    }
     // Calculate the average of all the records
     const averageTemperature = calculateAverage(records, 'temperature');
     const averageHumidity = calculateAverage(records, 'humidity');
