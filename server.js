@@ -16,7 +16,7 @@ const getRouter = require('./routes/get')
 
 app.use(express.static('public')) 
 
-const {SensorSetSchema} = require('./models/Devices')
+const {SensorSet} = require('./models/Devices')
 
 const cron = require('node-cron');
 
@@ -89,7 +89,7 @@ let job = cron.schedule('* * * * *', async () => {
     const timestamp = Date.now();
 
     // Find all records that were created in the last 60 seconds
-    const sensorSet = await SensorSetSchema.findOne({ id: '964727042' });
+    const sensorSet = await SensorSet.findOne({ id: '964727042' });
     const records = sensorSet.temp_records.filter(temp_records => temp_records.timestamp > timestamp - 60000);
 
     // Calculate the average of all the records
