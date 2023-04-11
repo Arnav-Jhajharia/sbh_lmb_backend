@@ -26,9 +26,10 @@ router.get('/sensor', verifyToken, async (req, res) => {
     
     console.log(sensorId);
     const sensor = await SensorSet.findOne({_id:sensorId})
-    console.log(sensor)
+    
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
+  console.log(sensor.temp_records[sensor.temp_records.length - 1])
     const records = sensor.temp_records[sensor.temp_records.length - 1]
     return res.json({records: records, lastWatered: sensor.lastWatered});
   }
