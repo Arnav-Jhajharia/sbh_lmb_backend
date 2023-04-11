@@ -114,12 +114,12 @@ let job = cron.schedule('* * * * *', async () => {
 
     // Insert the new record into the sensor set
     sensorSet.records.push(newRecord);
-    // if (sensorSet.temp_records.length > 60) {
-    //   await SensorSetSchema.updateOne(
-    //     { id: '964727042' },
-    //     { $set: { records: [] } }
-    //   );
-    // }
+    if (sensorSet.temp_records.length > 100) {
+      await SensorSetSchema.updateOne(
+        { id: '964727042' },
+        { $set: { temp_records: [] } }
+      );
+    }
 
 
     await sensorSet.save();
