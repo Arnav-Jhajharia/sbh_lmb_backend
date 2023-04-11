@@ -221,9 +221,10 @@ router.post('/self_water', verifyToken, async (req, res)=> {
     const sensorId = req.user.sensorsets;
     const { waterMode } = req.body;
     if(sensorId == null) return res.status(401);
+    let sensor = await SensorSet.findOne({_id:sensorId})
+
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
-    let sensor = await SensorSet.findOne({_id:sensorId})
 
     if(waterMode != 'auto')
     {
