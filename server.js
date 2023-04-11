@@ -117,7 +117,7 @@ let job = cron.schedule('* * * * *', async () => {
     if (sensorSet.temp_records.length > 60) {
       await SensorSetSchema.updateOne(
         { id: '964727042' },
-        { $set: { records: [] } }
+        { $set: { temp_records: [] } }
       );
     }
 
