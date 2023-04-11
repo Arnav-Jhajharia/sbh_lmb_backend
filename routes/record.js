@@ -94,7 +94,10 @@ router.post('/sensor', verifySensor, async (req, res) => {
     try {
       sensor.temp_records.push(req.body);
       if(sensor.waterMode != 'auto') {
+        if(sensor.waterMode == 'on')
+
         await sensor.save();
+
         return res.json({water: (sensor.waterMode === 'on')?true:false});
       }
         if(Number(req.body.soil_moisture) < sensor.thresholdMoisture)
@@ -218,13 +221,31 @@ router.post('/self_water', verifyToken, async (req, res)=> {
     const sensorId = req.user.sensorsets;
     const { waterMode } = req.body;
     if(sensorId == null) return res.status(401);
+    if(!sensor)
+        return res.status(401).json({ error: 'no brains or what-' });
     let sensor = await SensorSet.findOne({_id:sensorId})
+
+    if(waterMode != 'auto')
+    {
+      if(waterMode == 'on' && sensor.waterMode == 'off')
+      {
+        sensor.timeWateringStart = Date.now();
+      }
+      else if(waterMode == 'off' && sensor.waterMode == 'on')
+      {
+        let seconds = Math.abs((new Date()).getTime() - sensor.timeWateringStart.getTime())/1000;
+        console.log(seconds)
+        sensor.lastWatered = {
+          duration: seconds,
+          timestamp: sensor.timeWateringStart
+        }
+      }
+    }
     if(waterMode != 'manual')
     sensor.waterMode = waterMode;
     else 
     sensor.waterMode = 'off';
-    if(!sensor)
-        return res.status(401).json({ error: 'no brains or what-' });
+    
     // sensor.thresholdMoisture = moistureLevel;
     
     
