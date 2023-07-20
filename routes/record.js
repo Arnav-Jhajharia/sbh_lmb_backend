@@ -51,6 +51,39 @@ router.post('/rover', verifyToken, async (req, res) => {
  
 });
 
+router.post('/moisture', verifyToken, async (req, res)=> {
+
+// const user = req.user; // Retrieve  the user data from the req object
+ try {
+  const sensorId = req.user.sensorsets;
+  const { moistureLevel } = req.body;
+  if(sensorId == null) return res.status(401);
+  let sensor = await SensorSet.findOne({_id:sensorId})
+  
+  if(!sensor)
+      return res.status(401).json({ error: 'no brains or what-' });
+  sensor.thresholdMoisture = moistureLevel;
+  const limit = 10; // number of records to keep
+  
+await sensor.save()
+    // if(req.body.soil_moisture > SOIL_MOISTURE)
+    // {
+    //   if(isWatering == true)
+    //   return res.json({water: true})
+    // }
+
+    console.log('ho gaya');
+    return res.json({sensor: sensor.toJSON()});
+}
+
+catch(e)
+{
+  console.log(e)
+  return res.status(401).json('req.body messed up shit')
+}
+
+});
+
 // Register sensor 
 router.post('/sensor', verifySensor, async (req, res) => {
   
@@ -61,7 +94,11 @@ router.post('/sensor', verifySensor, async (req, res) => {
     // const user = req.user; // Retrieve  the user data from the req object
     try {
       sensor.temp_records.push(req.body);
-        if(Number(req.body.soil_moisture) < SOIL_MOISTURE)
+      if(sensor.waterMode != 'auto') {
+        await sensor.save();
+        return res.json({water: (sensor.waterMode === 'on')?true:false});
+      }
+        if(Number(req.body.soil_moisture) < sensor.thresholdMoisture)
         {
           console.log("if block")
           sensor.isWatering = true;
@@ -173,3 +210,59 @@ catch(e)
 }
 
 });
+
+
+router.post('/self_water', verifyToken, async (req, res)=> {
+
+  // const user = req.user; // Retrieve  the user data from the req object
+   try {
+    const sensorId = req.user.sensorsets;
+    const { waterMode } = req.body;
+    if(sensorId == null) return res.status(401);
+    let sensor = await SensorSet.findOne({_id:sensorId})
+
+    if(!sensor)
+        return res.status(401).json({ error: 'no brains or what-' });
+
+    if(waterMode != 'auto')
+    {
+      if(waterMode == 'on' && sensor.waterMode == 'off')
+      {
+        sensor.timeWateringStart = Date.now();
+      }
+      else if(waterMode == 'off' && sensor.waterMode == 'on')
+      {
+        let seconds = Math.abs((new Date()).getTime() - sensor.timeWateringStart.getTime())/1000;
+        console.log(seconds)
+        sensor.lastWatered = {
+          duration: seconds,
+          timestamp: sensor.timeWateringStart
+        }
+      }
+    }
+    if(waterMode != 'manual')
+    sensor.waterMode = waterMode;
+    else 
+    sensor.waterMode = 'off';
+    
+    // sensor.thresholdMoisture = moistureLevel;
+    
+    
+    await sensor.save()
+      // if(req.body.soil_moisture > SOIL_MOISTURE)
+      // {
+      //   if(isWatering == true)
+      //   return res.json({water: true})
+      // }
+  
+      console.log('ho gaya');
+      return res.json({rover: sensor.toJSON()});
+  }
+  
+  catch(e)
+  {
+    console.log(e)
+    return res.status(401).json('req.body messed up shit')
+  }
+  
+  });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const recordSensorSetSchema = new mongoose.Schema({
+
     temperature: { type: Number, required: true,default: 0 },
     humidity: { type: Number, required: true,default: 0 },
     sunlight: { type: Number, required: true,default: 0 },
@@ -13,6 +14,7 @@ const lastWatered = new mongoose.Schema({
   timestamp: {type: Date, required: true, default: Date.now},
 })
 const SensorSetSchema = new mongoose.Schema({
+  thresholdMoisture: {type: Number, required: true, default: 50}, 
     name: {
       type: String,
       required: true
@@ -26,7 +28,8 @@ const SensorSetSchema = new mongoose.Schema({
     lastWatered: lastWatered, 
     isWatering: {type: Boolean, required: true, default: false},
     timeWateringStart: {type: Date, required: true, default: Date.now},
-    temp_records: [recordSensorSetSchema] // new field for temporary records
+    temp_records: [recordSensorSetSchema], // new field for temporary records
+    waterMode: {type: String, required: true, default: 'auto'}
   });
 
 const SensorSet = mongoose.model('SensorSet', SensorSetSchema);
