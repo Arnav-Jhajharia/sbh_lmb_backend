@@ -5,16 +5,19 @@ if(process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const bodyParser = require('body-parser');
 const app = express()
-
+var cors = require('cors')
 const indexRouter = require('./routes/index')
 const authRouter = require('./routes/auth')
 const deviceCreationRouter = require('./routes/deviceCreation')
 const deviceRegistrationRouter = require('./routes/deviceRegistration')
 const recordRouter = require('./routes/record')
 const getRouter = require('./routes/get')
+const actionRouter = require('./routes/action')
+
 // app.set('views', __dirname, '/views')
 
 app.use(express.static('public')) 
+app.use(cors())
 
 const {SensorSet} = require('./models/Devices')
 
@@ -157,4 +160,5 @@ app.use('/create', deviceCreationRouter)
 app.use('/reg', deviceRegistrationRouter)
 app.use('/record', recordRouter)
 app.use('/get', getRouter)
-app.listen(80, "0.0.0.0")
+// app.use('/action', actionRouter)
+app.listen(3000, "0.0.0.0")
