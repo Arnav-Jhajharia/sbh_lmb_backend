@@ -17,13 +17,13 @@ router.post('/rover', verifyToken, async (req, res) => {
   try {
     const roverId = req.user.rovers;
 
-    const { direction } = req.body;
+    const { direction, arm, display } = req.body;
     if(roverId == null) return;
     let rover = await Rover.findOne({_id:roverId})
     
     if(!rover)
         return res.status(401).json({ error: 'no brains or what-' });
-    rover.records.push({movement:direction});
+    rover.records.push({movement:direction, arm: arm, display: display});
     const limit = 10; // number of records to keep
     
 
@@ -217,10 +217,11 @@ router.post('/self_water', verifyToken, async (req, res)=> {
   // const user = req.user; // Retrieve  the user data from the req object
    try {
     const sensorId = req.user.sensorsets;
+    console.log(sensorId)
     const { waterMode } = req.body;
     if(sensorId == null) return res.status(401);
     let sensor = await SensorSet.findOne({_id:sensorId})
-
+    
     if(!sensor)
         return res.status(401).json({ error: 'no brains or what-' });
 

@@ -92,7 +92,7 @@ let job = cron.schedule('* * * * *', async () => {
     const timestamp = Date.now();
 
     // Find all records that were created in the last 60 seconds
-    const sensorSet = await SensorSet.findOne({ id: '964727042' });
+    const sensorSet = await SensorSet.findOne({ id: '485793015' });
     const records = sensorSet.temp_records.filter(temp_records => temp_records.timestamp > timestamp - 60000);
     if(records.length < 4)
     {

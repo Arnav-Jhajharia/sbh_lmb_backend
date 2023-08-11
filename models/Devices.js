@@ -40,7 +40,8 @@ const recordRoverSchema = new mongoose.Schema({
     movement: {type: String, required: true, default: "nothing"},
     status: {type: String, required: true,default: 'Idle' },
     batteryLevel: { type: Number, required: true, default: 0 },
-    timestamp: { type: Date, required: true, default: Date.now }
+    timestamp: { type: Date, required: true, default: Date.now },
+    display: { type: String, required: false, default: 'logo1'}
   });
 const RoverSchema = new mongoose.Schema({
     name: {
